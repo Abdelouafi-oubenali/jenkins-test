@@ -10,6 +10,7 @@ public class AppTest {
         App app = new App();
         assertEquals("Hello, Jenkins!", app.greet("Jenkins"));
 
+
     }
 
     @Test

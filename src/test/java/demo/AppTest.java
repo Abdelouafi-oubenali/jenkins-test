@@ -15,6 +15,7 @@ public class AppTest {
     public void testGreetEmpty() {
         App app = new App();
         assertEquals("Hello, World!", app.greet(""));
+        System.out.println("hello test jenkins ");
     }
 
     @Test

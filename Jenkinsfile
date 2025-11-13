@@ -1,52 +1,52 @@
-pipeline {
-    agent any
+    pipeline {
+        agent any
 
-    tools {
-        maven 'maven-3.8.5'
-        jdk 'jdk-17'
-    }
-
-    stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
+        tools {
+            maven 'maven-3.8.5'
+            jdk 'jdk-17'
         }
 
-        stage('Build') {
-            steps {
-                sh 'mvn clean compile'
+        stages {
+            stage('Checkout') {
+                steps {
+                    checkout scm
+                }
             }
-        }
 
-        stage('Unit Tests') {
-            steps {
-                sh 'mvn test'
+            stage('Build') {
+                steps {
+                    sh 'mvn clean compile'
+                }
             }
-            post {
-                always {
-                    junit 'target/surefire-reports/*.xml'
+
+            stage('Unit Tests') {
+                steps {
+                    sh 'mvn test'
+                }
+                post {
+                    always {
+                        junit 'target/surefire-reports/*.xml'
+                    }
+                }
+            }
+
+            stage('Package') {
+                steps {
+                    sh 'mvn package -DskipTests'
+                    archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
                 }
             }
         }
 
-        stage('Package') {
-            steps {
-                sh 'mvn package -DskipTests'
-                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+        post {
+            always {
+                echo "Build ${currentBuild.result} - ${env.JOB_NAME} #${env.BUILD_NUMBER}"
+            }
+            success {
+                echo 'Pipeline exécuté avec succès!'
+            }
+            failure {
+                echo 'Pipeline a échoué!'
             }
         }
     }
-
-    post {
-        always {
-            echo "Build ${currentBuild.result} - ${env.JOB_NAME} #${env.BUILD_NUMBER}"
-        }
-        success {
-            echo 'Pipeline exécuté avec succès!'
-        }
-        failure {
-            echo 'Pipeline a échoué!'
-        }
-    }
-}

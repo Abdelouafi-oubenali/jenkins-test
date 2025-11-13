@@ -2,16 +2,42 @@ version: '3.8'
 
 services:
   jenkins:
-    image: jenkins/jenkins:lts
-    container_name: jenkins
-    restart: always
+    image: jenkins/jenkins:lts-jdk11
+    container_name: jenkins_test
+    privileged: true
+    user: root
     ports:
       - "8083:8080"
       - "50001:50001"
-    volumes:
-      - jenkins_home:/var/jenkins_home
     environment:
-      - JAVA_OPTS=-Djenkins.install.runSetupWizard=true
+      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
+    volumes:
+      - jenkins_Data:/var/jenkins_Data
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./src:/var/jenkins_Data/workspace/src
+    networks:
+      - jenkins-net
+
+  sonarqube:
+    image: sonarqube:community
+    container_name: sonarqube
+    ports:
+      - "9001:9001"
+    environment:
+      - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
+    volumes:
+      - sonarqube_data:/opt/sonarqube/data
+      - sonarqube_extensions:/opt/sonarqube/extensions
+      - sonarqube_logs:/opt/sonarqube/logs
+    networks:
+      - jenkins-net
 
 volumes:
-  jenkins_home:
+  jenkins_Data:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_logs:
+
+networks:
+  jenkins-net:
+    driver: bridge

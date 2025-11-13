@@ -8,7 +8,7 @@ public class AppTest {
     @Test
     public void testGreet() {
         App app = new App();
-        assertEquals("Hello, Jenkins!", app.greet("Jenkins"));
+        assertEquals("Hello, Jenkins!", app.greet("Jenkins")); //commit pour test
     }
 
     @Test

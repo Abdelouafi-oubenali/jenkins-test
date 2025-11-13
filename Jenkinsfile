@@ -70,18 +70,6 @@ pipeline {
                 archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
             }
         }
-
-        stage('Deploy to Docker') {
-            when {
-                branch 'main'
-            }
-            steps {
-                script {
-                    docker.build("java-demo-app:${env.BUILD_ID}", ".")
-                    docker.image("java-demo-app:${env.BUILD_ID}").push()
-                }
-            }
-        }
     }
 
     post {

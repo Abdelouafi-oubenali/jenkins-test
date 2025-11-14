@@ -15,6 +15,6 @@ public class App {
 
     public static void main(String[] args) {
         App app = new App();
-        System.out.println(app.greet("Jenkins"));
+        System.out.println(app.greet("Jenkins tet"));
     }
 }
